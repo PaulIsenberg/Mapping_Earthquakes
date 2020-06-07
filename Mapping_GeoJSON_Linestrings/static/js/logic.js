@@ -21,41 +21,81 @@ attribution: 'Map data © <a href="https://www.openstreetmap.org/">OpenStreetMap
 	accessToken: API_KEY
 });
 
+let light = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/light-v10/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery (c) <a href="https://www.mapbox.com/">Mapbox</a>',
+	maxZoom: 18,
+	//id: 'mapbox.streets', removed in 13.5.3
+	accessToken: API_KEY
+});
+
+let night = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/navigation-preview-night-v4/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery (c) <a href="https://www.mapbox.com/">Mapbox</a>',
+	maxZoom: 18,
+	//id: 'mapbox.streets', removed in 13.5.3
+	accessToken: API_KEY
+});
+
+let day = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/navigation-guidance-day-v4/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery (c) <a href="https://www.mapbox.com/">Mapbox</a>',
+	maxZoom: 18,
+	//id: 'mapbox.streets', removed in 13.5.3
+	accessToken: API_KEY
+});
+
 // Create a base layer that holds both maps.
 let baseMaps = {
 	Street: streets,
-	Dark: dark
+	Dark: dark,
+	Light: light,
+	Night: night,
+	Day: day
   };
 
 // Create the map object with center, zoom level and default layer.
 let map = L.map('mapid', {
-	center: [30, 30],
+	center: [44, -80],
 	zoom: 3,
-	layers: [streets]
+	// default layer in the map object
+	layers: [light]
 })
 
 // Pass our map layers into our layers control and add the layers control to the map.  This is from LEAFLET and replaces "streets.addTo(map)"
-L.control.layers(baseMaps).addTo(map);
+L.control.layers(baseMaps, 
+	//color: "#ffff00",
+	//weight: 2
+	)
+.addTo(map);
 
 
 // Then we add our 'graymap' tile layer to the map.
 // removed in 13.5.4      streets.addTo(map);
 
 // Accessing the airport GeoJSON URL in 13.5.3
-let airportData = "https://raw.githubusercontent.com/PaulIsenberg/Mapping_Earthquakes/master/majorAirports.json";
+//let airportData = "https://raw.githubusercontent.com/PaulIsenberg/Mapping_Earthquakes/master/majorAirports.json";
+// Accessing the Toronto Data GeoJSON url in 13.5.5
+let torontoData = "https://raw.githubusercontent.com/PaulIsenberg/Mapping_Earthquakes/master/torontoRoutes.json";
+
+// Create a style for the lines.
+let myStyle = {
+	color: "#66ffcc", //#ffffa1
+	weight: 2
+}
 
 // Grabbing our GeoJSON data.
-d3.json(airportData).then(function(data) {
+d3.json(torontoData).then(function(data) {
 	console.log(data);
 // Creating a GeoJSON layer with the retrieved data.  Added for 13.5.4 but removed for skill drill
+// Turning this line back on for 13.5.5
 //L.geoJson(data).addTo(map);
 	//The below 6 lines are from the 13.5.3 skill drill
   //Creating a GeoJSON layer with the retrieved data.
   L.geoJson(data, {
+	style: myStyle,
 	onEachFeature: function(feature, layer) {
 		console.log(layer);
-		layer.bindPopup("<h2> Airport Code:" + feature.properties.faa + "</h2>" + "<hr>" + "<h3> Airport Name: " + feature.properties.name + "</h3>");
+		layer.bindPopup("<h2> Airline: " + feature.properties.airline + "</h2>" + "<hr>" + "<h3> Destination: " + feature.properties.dst + "</h3>");
 	   }
+	   
   })
     .addTo(map);
 });
