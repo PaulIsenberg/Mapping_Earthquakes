@@ -13,7 +13,12 @@ attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStree
 	//id: 'mapbox.streets', removed in 13.5.3
 	accessToken: API_KEY
 });
-
+let satelliteStreets = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v11/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery (c) <a href="https://www.mapbox.com/">Mapbox</a>',
+	maxZoom: 18,
+	//id: 'mapbox.streets', removed in 13.5.3
+	accessToken: API_KEY
+});
 // We create the dark view tile layer that will be an option for our map.  Added in 13.5.4
 let dark = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/dark-v10/tiles/{z}/{x}/{y}?access_token={accessToken}', {
 attribution: 'Map data © <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery (c) <a href="https://www.mapbox.com/">Mapbox</a>',
@@ -48,15 +53,16 @@ let baseMaps = {
 	Dark: dark,
 	Light: light,
 	Night: night,
-	Day: day
+	Day: day,
+	Sat: satelliteStreets
   };
 
 // Create the map object with center, zoom level and default layer.
 let map = L.map('mapid', {
-	center: [44, -80],
-	zoom: 3,
+	center: [43.7, -79.3],
+	zoom: 12,
 	// default layer in the map object
-	layers: [light]
+	layers: [satelliteStreets]
 })
 
 // Pass our map layers into our layers control and add the layers control to the map.  This is from LEAFLET and replaces "streets.addTo(map)"
@@ -73,32 +79,48 @@ L.control.layers(baseMaps,
 // Accessing the airport GeoJSON URL in 13.5.3
 //let airportData = "https://raw.githubusercontent.com/PaulIsenberg/Mapping_Earthquakes/master/majorAirports.json";
 // Accessing the Toronto Data GeoJSON url in 13.5.5
-let torontoData = "https://raw.githubusercontent.com/PaulIsenberg/Mapping_Earthquakes/master/torontoRoutes.json";
+//let torontoData = "https://raw.githubusercontent.com/PaulIsenberg/Mapping_Earthquakes/master/torontoRoutes.json";
+// Accessing the Toronto neighborhoods GeoJSON URL.
+let torontoHoods = "https://raw.githubusercontent.com/PaulIsenberg/Mapping_Earthquakes/master/torontoNeighborhoods.json";
 
 // Create a style for the lines.
 let myStyle = {
-	color: "#66ffcc", //#ffffa1
-	weight: 2
+	color: "blue", //#ffffa1
+	fillColor: "yellow",
+	weight: 1
 }
 
-// Grabbing our GeoJSON data.
-d3.json(torontoData).then(function(data) {
+
+// for 13.5.6 there are no popups, and then there are
+d3.json(torontoHoods).then(function(data) {
 	console.log(data);
+	L.geoJSON(data, {
+		style: myStyle,
+		onEachFeature: function(feature, layer) {
+			layer.bindPopup("<h2> Neighborhood: " + feature.properties.AREA_NAME + "</h2>");
+		}
+	})
+	.addTo(map);
+});
+
+// Grabbing our GeoJSON data.
+//d3.json(torontoData).then(function(data) {
+	//console.log(data);
 // Creating a GeoJSON layer with the retrieved data.  Added for 13.5.4 but removed for skill drill
 // Turning this line back on for 13.5.5
 //L.geoJson(data).addTo(map);
 	//The below 6 lines are from the 13.5.3 skill drill
   //Creating a GeoJSON layer with the retrieved data.
-  L.geoJson(data, {
-	style: myStyle,
-	onEachFeature: function(feature, layer) {
-		console.log(layer);
-		layer.bindPopup("<h2> Airline: " + feature.properties.airline + "</h2>" + "<hr>" + "<h3> Destination: " + feature.properties.dst + "</h3>");
-	   }
+  //L.geoJson(data, {
+	//style: myStyle,
+	//onEachFeature: function(feature, layer) {
+		//console.log(layer);
+		//layer.bindPopup("<h2> Airline: " + feature.properties.airline + "</h2>" + "<hr>" + "<h3> Destination: " + feature.properties.dst + "</h3>");
+	   //}
 	   
-  })
-    .addTo(map);
-});
+  //})
+    //.addTo(map);
+//});
 
 // Add GeoJSON data from 13.5.2
 //let sanFranAirport =
