@@ -20,40 +20,40 @@ attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStree
 	accessToken: API_KEY
 });
 // We create the dark view tile layer that will be an option for our map.  Added in 13.5.4
-let dark = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/dark-v10/tiles/{z}/{x}/{y}?access_token={accessToken}', {
-attribution: 'Map data © <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery (c) <a href="https://www.mapbox.com/">Mapbox</a>',
-	maxZoom: 18,
-	accessToken: API_KEY
-});
+//let dark = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/dark-v10/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+//attribution: 'Map data © <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery (c) <a href="https://www.mapbox.com/">Mapbox</a>',
+	//maxZoom: 18,
+	//accessToken: API_KEY
+//});
 
-let light = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/light-v10/tiles/{z}/{x}/{y}?access_token={accessToken}', {
-attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery (c) <a href="https://www.mapbox.com/">Mapbox</a>',
-	maxZoom: 18,
+//let light = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/light-v10/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+//attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery (c) <a href="https://www.mapbox.com/">Mapbox</a>',
+	//maxZoom: 18,
 	//id: 'mapbox.streets', removed in 13.5.3
-	accessToken: API_KEY
-});
+	//accessToken: API_KEY
+//});
 
-let night = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/navigation-preview-night-v4/tiles/{z}/{x}/{y}?access_token={accessToken}', {
-attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery (c) <a href="https://www.mapbox.com/">Mapbox</a>',
-	maxZoom: 18,
+//let night = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/navigation-preview-night-v4/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+//attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery (c) <a href="https://www.mapbox.com/">Mapbox</a>',
+	//maxZoom: 18,
 	//id: 'mapbox.streets', removed in 13.5.3
-	accessToken: API_KEY
-});
+	//accessToken: API_KEY
+//});
 
-let day = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/navigation-guidance-day-v4/tiles/{z}/{x}/{y}?access_token={accessToken}', {
-attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery (c) <a href="https://www.mapbox.com/">Mapbox</a>',
-	maxZoom: 18,
+//let day = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/navigation-guidance-day-v4/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+//attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery (c) <a href="https://www.mapbox.com/">Mapbox</a>',
+	//maxZoom: 18,
 	//id: 'mapbox.streets', removed in 13.5.3
-	accessToken: API_KEY
-});
+	//accessToken: API_KEY
+//});
 
 // Create a base layer that holds both maps.
 let baseMaps = {
 	Street: streets,
-	Dark: dark,
-	Light: light,
-	Night: night,
-	Day: day,
+	//Dark: dark,
+	//Light: light,
+	//Night: night,
+	//Day: day,
 	Sat: satelliteStreets
   };
 
@@ -161,7 +161,6 @@ d3.json("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geoj
     L.geoJson(data, {
     // We turn each feature into a circleMarker on the map.
         pointToLayer: function(feature, latlng) {
-            console.log(data);
             return L.circleMarker(latlng);
         },
     style: styleInfo,
@@ -175,7 +174,7 @@ d3.json("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geoj
     }).addTo(earthquakes);
         //The  we add the earthquake layer to our map (13.6.4)
         earthquakes.addTo(map);
-});
+
 // 13.6.5 adding a Legend for earthquake magnitude from LEAFLET chloropleth examples website
 var legend = L.control({
     position: "bottomright"
@@ -198,10 +197,10 @@ legend.onAdd = function () {
         div.innerHTML +=
             '<i style="background:' + colors[i] + '"></i> ' +
             magnitudes[i] + (magnitudes[i + 1] ? '&ndash;' + magnitudes[i + 1] + '<br>' : '+');
-    } console.log(div)
+    } 
     return div;
     };
-
+    
 legend.addTo(map);
 
 // This function returns the style data for each of the earthquakes we plot on
@@ -245,7 +244,7 @@ function getRadius(magnitude) {
     }
     return magnitude * 4;
   }
-
+});
 
 
 // Grabbing our GeoJSON data. 13.5.2 first part
