@@ -31,11 +31,6 @@ attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStree
 	maxZoom: 18,
 	accessToken: API_KEY
 });
-let outdoors = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/outdoors-v11/tiles/{z}/{x}/{y}?access_token={accessToken}', {
-attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery (c) <a href="https://www.mapbox.com/">Mapbox</a>',
-	maxZoom: 18,
-	accessToken: API_KEY
-});
 
 // Create a base layer that holds both maps.
 let baseMaps = {
@@ -44,9 +39,8 @@ let baseMaps = {
 	Light: light,
 	Night: night,
 	Day: day,
-    Sat: satelliteStreets,
-    Outdoor: outdoors
-  };
+    Sat: satelliteStreets
+    };
 
 // Create the earthquake layer for our map. Added in 13.6.4
 let earthquakes = new L.layerGroup();
@@ -179,7 +173,7 @@ d3.json(tectonicPlates).then(function(data) {
     pointToLayer: function(feature, coordinates) {
         console.log(feature)},
         style: myStyle,
-        onEachFeature: function(feature, layer) {}
+        onEachFeature: function(feature, layer) {} 
     }) 
     .addTo(plates);
     plates.addTo(map)
